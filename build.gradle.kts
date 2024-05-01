@@ -47,15 +47,6 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 }
 
-tasks.register<Test>("unitTest") {
-	description = "Runs unit tests."
-	group = "verification"
-
-	filter {
-		excludeTestsMatching("*FunctionalTest")
-	}
-}
-
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
