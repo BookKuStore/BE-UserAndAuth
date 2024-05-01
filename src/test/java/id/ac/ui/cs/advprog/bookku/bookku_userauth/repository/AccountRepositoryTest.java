@@ -1,6 +1,9 @@
 package id.ac.ui.cs.advprog.bookku.bookku_userauth.repository;
 
 import id.ac.ui.cs.advprog.bookku.bookku_userauth.model.Account;
+
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -15,10 +18,23 @@ public class AccountRepositoryTest {
     @Mock
     private AccountRepository accountRepository;
 
+    private Account account;
+
+    @BeforeEach
+    public void setUp() {
+        account = new Account();
+        account.setUsername("testuser");
+        account.setPassword("password");
+        account.setEmail("example@gmail.com");
+        account.setName("name");
+        account.setPhone("12345");
+        account.setRole("user");
+
+        accountRepository.save(account);
+    }
+
     @Test
     public void testFindByUsername() {
-        Account account = new Account();
-        account.setUsername("testuser");
         when(accountRepository.findByUsername("testuser")).thenReturn(Optional.of(account));
 
         Optional<Account> foundAccount = accountRepository.findByUsername("testuser");
