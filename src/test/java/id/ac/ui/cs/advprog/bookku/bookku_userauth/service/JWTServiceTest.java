@@ -13,8 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Date;
-
 @ExtendWith(MockitoExtension.class)
 public class JWTServiceTest {
 
