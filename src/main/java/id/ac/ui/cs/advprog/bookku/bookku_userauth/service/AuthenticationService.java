@@ -25,7 +25,12 @@ public class AuthenticationService {
 
     public LoginResponse login(LoginRequest request) {
 
-        if (usernameContainsSpace(request.getUsername())){
+        // Check blank inputs
+        if (request.getUsername().isBlank() || request.getPassword().isBlank()) {
+            throw new BlankInputException();
+        }
+
+        if (usernameContainsSpace(request.getUsername())) {
             throw new UsernameContainsSpaceException();
         }
 
@@ -58,6 +63,11 @@ public class AuthenticationService {
 
     public RegisterResponse register(RegisterRequest request) {
 
+        // Check blank inputs
+        if (request.getUsername().isBlank() || request.getPassword().isBlank() || request.getName().isBlank() || request.getEmail().isBlank() || request.getPhone().isBlank()) {
+            throw new BlankInputException();
+        }
+
         if (usernameContainsSpace(request.getUsername())) {
             throw new UsernameContainsSpaceException();
         }
@@ -74,6 +84,9 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .phone(request.getPhone())
                 .build();
+        newAccount.setCartId(newAccount.getId());
+        newAccount.setHistoryId(newAccount.getId());
+        
         accountRepository.save(newAccount);
 
         var accessToken = jwtService.generateAccessToken(newAccount);
