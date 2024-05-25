@@ -80,4 +80,22 @@ public class JWTServiceTest {
         assertThrows(ExpiredTokenException.class, () -> jwtService.validateAccessToken(expiredTokenExample));
     }
 
+    @Test
+    public void testExtractUsername_ShouldReturnUsername() {
+        String token = jwtService.generateAccessToken(testAccount);
+        assertEquals("testuser", jwtService.extractUsername(token));
+    }
+
+    @Test
+    public void testExtractRole_ShouldReturnRole() {
+        String token = jwtService.generateAccessToken(testAccount);
+        assertEquals("user", jwtService.extractRole(token));
+    }
+
+    @Test
+    public void testExtractId_ShouldReturnId() {
+        String token = jwtService.generateAccessToken(testAccount);
+        assertEquals("1", jwtService.extractId(token));
+    }
+
 }
