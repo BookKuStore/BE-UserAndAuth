@@ -12,14 +12,14 @@ import lombok.*;
 @Entity
 @Table(
     name = "account",
-    uniqueConstraints = { @UniqueConstraint(columnNames = "username") }
+    uniqueConstraints = { @UniqueConstraint(columnNames = {"username"}) }
 )
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
     @GenericGenerator(name = "seq", strategy="increment")
-    private Integer id;
+    private int id;
 
     @NonNull
     private String username;
@@ -39,5 +39,9 @@ public class Account {
 
     @NonNull
     private String phone;
+
+    private int cartId;
+
+    private int historyId;
 
 }
