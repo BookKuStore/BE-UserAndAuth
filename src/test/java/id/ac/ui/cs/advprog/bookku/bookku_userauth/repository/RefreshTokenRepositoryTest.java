@@ -39,4 +39,10 @@ public class RefreshTokenRepositoryTest {
         assertEquals(account, foundToken.get().getAccount());
     }
 
+    @Test
+    public void testDeleteByToken() {
+        refreshTokenRepository.deleteByToken("testtoken");
+        verify(refreshTokenRepository, times(1)).deleteByToken("testtoken");
+    }
+
 }
