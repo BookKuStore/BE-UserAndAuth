@@ -7,7 +7,6 @@ import id.ac.ui.cs.advprog.bookku.bookku_userauth.dto.AuthorizeResponse;
 import id.ac.ui.cs.advprog.bookku.bookku_userauth.dto.RefreshRequest;
 import id.ac.ui.cs.advprog.bookku.bookku_userauth.dto.RefreshResponse;
 import id.ac.ui.cs.advprog.bookku.bookku_userauth.repository.AccountRepository;
-import id.ac.ui.cs.advprog.bookku.bookku_userauth.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 public class AuthorizationService {
 
     private final AccountRepository accountRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final JWTService jwtService;
 
     public AuthorizeResponse authorize(AuthorizeRequest request, String accessToken) {
@@ -51,7 +49,11 @@ public class AuthorizationService {
                 .accessToken(newAccessToken)
                 .build();
         } catch (ExpiredTokenException e) {
-            refreshTokenRepository.deleteByToken(request.getRefreshToken());
+            var username = jwtService.extractUsername(request.getRefreshToken());
+            var account = accountRepository.findByUsername(username).orElse(null);
+
+            jwtService.deleteRefreshTokenByAccount(account);
+
             throw new ExpiredTokenException();
         }
     }
