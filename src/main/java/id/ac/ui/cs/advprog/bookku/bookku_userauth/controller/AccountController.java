@@ -24,33 +24,9 @@ public class AccountController {
         return ResponseEntity.ok(listAccount);
     }
 
-    @GetMapping("/get-all-admin")
-    public ResponseEntity<List<Account>> getAllAdminAccounts() {
-        return ResponseEntity.ok(accountService.getAllAdminAccounts());
-    }
-    
-    @GetMapping("/seed-admin")
-    public ResponseEntity<String> seedAdmin() {
-
-        List<Account> adminAccounts = accountService.getAllAdminAccounts();
-        int counts = adminAccounts.size();
-        if (counts == 5) {
-            return ResponseEntity.ok("Admin accounts already seeded");
-        } else {
-            for (int i = 0; i < 5 - counts; i++) {
-                Account admin = Account.builder()
-                        .username(String.format("admin%d", i+1))
-                        .password(String.format("admin%d", i+1))
-                        .name(String.format("Admin %d", i+1))
-                        .email("admin@admin.com")
-                        .phone("123")
-                        .role("admin")
-                        .build();
-                accountService.registerAccount(admin);
-            }
-
-            return ResponseEntity.ok("Admin accounts seeded");
-        }
+    @GetMapping("/get-account")
+    public ResponseEntity<Account> getAccountByToken(@RequestHeader(name = "Authorization") String accessToken) {
+        return ResponseEntity.ok(accountService.getAccountFromToken(accessToken));
     }
     
 }
