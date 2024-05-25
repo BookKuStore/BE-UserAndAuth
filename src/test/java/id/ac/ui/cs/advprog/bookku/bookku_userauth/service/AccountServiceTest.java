@@ -30,6 +30,19 @@ class AccountServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        Account newAccount = Account.builder()
+                .username("test")
+                .password("test")
+                .role("user")
+                .name("Test")
+                .email("test@gmail.com")
+                .phone("1234567890")
+                .build();
+        newAccount.setCartId(newAccount.getId());
+        newAccount.setHistoryId(newAccount.getId());
+
+        when(accountRepository.save(newAccount)).thenReturn(newAccount);
     }
 
     @Test
