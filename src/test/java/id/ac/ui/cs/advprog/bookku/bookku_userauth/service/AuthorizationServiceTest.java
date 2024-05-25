@@ -112,7 +112,7 @@ public class AuthorizationServiceTest {
             authorizationService.refresh(request);
         });
 
-        verify(refreshTokenRepository, times(1)).deleteByToken(refreshToken);
+        verify(jwtService, times(1)).deleteRefreshTokenByAccount(null);
     }
 
     @Test
