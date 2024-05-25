@@ -35,12 +35,4 @@ public class AccountService {
         return account;
     }
 
-    public void registerAccount(Account account) {
-        if (accountRepository.findByUsername(account.getUsername()).isPresent()) {
-            return;
-        }
-
-        accountRepository.save(account);
-    }
-
 }
