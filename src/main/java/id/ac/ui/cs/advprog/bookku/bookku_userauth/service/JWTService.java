@@ -49,7 +49,7 @@ public class JWTService {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(Integer.toString(account.getId()))
+                .setSubject(Long.toString(account.getId()))
                 .setIssuedAt(currentDate)
                 .setExpiration(expirationTime)
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
