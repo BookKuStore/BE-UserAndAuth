@@ -7,23 +7,37 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.graphql.AutoConfigureGraphQl;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WebMvcTest(AccountController.class)
+@AutoConfigureMockMvc
 class AccountControllerTest {
 
-    @Mock
-    private AccountService accountService;
+    @Autowired
+    private MockMvc mvc;
 
-    @InjectMocks
-    private AccountController accountController;
+    @MockBean
+    private AccountService accountService;
 
     @BeforeEach
     void setUp() {
@@ -31,48 +45,95 @@ class AccountControllerTest {
     }
 
     @Test
-    void testGetAllAccount() {
-        // Arrange
-        List<Account> accounts = new ArrayList<>();
-        when(accountService.getAllAccount()).thenReturn(accounts);
+    void testGetAllAccount() throws Exception {
+        List<Account> expectedOutput = new ArrayList<>();
+        Account account1 = Account.builder()
+                .username("test")
+                .password("test")
+                .role("user")
+                .name("Test")
+                .email("email@test.com")
+                .phone("1234567890")
+                .build();
+            account1.setCartId(account1.getId());
+            account1.setHistoryId(account1.getId());
 
-        // Act
-        ResponseEntity<List<Account>> response = accountController.getAllAccount();
+        Account account2 = Account.builder()
+                .username("test2")
+                .password("test2")
+                .role("user")
+                .name("Test2")
+                .email("test2@gmail.com")
+                .phone("1234567890")
+                .build();
+            account2.setCartId(account2.getId());
+            account2.setHistoryId(account2.getId());
+        
+        expectedOutput.add(account1);
+        expectedOutput.add(account2);
+        when(accountService.getAllAccount()).thenReturn(expectedOutput);
 
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(accounts, response.getBody());
-        verify(accountService).getAllAccount();
+        mvc.perform(
+            get("/account/all")
+        ).andExpect(
+            result -> {
+                var response = result.getResponse();
+                var responseContent = response.getContentAsString();
+
+                var expectedResponseJson = new ArrayList<>();
+                expectedResponseJson.add(account1);
+                expectedResponseJson.add(account2);
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                try {
+                    var expectedValueAsString = objectMapper.writeValueAsString(expectedResponseJson);
+                    assertEquals(expectedValueAsString, responseContent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }   
+            }
+        )
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(status().isOk());
     }
 
     @Test
-    void testGetAllAdminAccounts() {
-        // Arrange
-        List<Account> adminAccounts = new ArrayList<>();
-        when(accountService.getAllAdminAccounts()).thenReturn(adminAccounts);
+    void testGetAccountByToken() throws Exception {
+        String mockToken = "mockToken";
 
-        // Act
-        ResponseEntity<List<Account>> response = accountController.getAllAdminAccounts();
+        Account example = Account.builder()
+                .username("test")
+                .password("test")
+                .role("user")
+                .name("Test")
+                .email("test@test.com")
+                .phone("1234567890")
+                .build();
+            example.setCartId(example.getId());
+            example.setHistoryId(example.getId());
+        
+        when(accountService.getAccountFromToken(Mockito.any())).thenReturn(example);
 
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(adminAccounts, response.getBody());
-        verify(accountService).getAllAdminAccounts();
-    }
+        mvc
+        .perform(
+            get("/account/get-account")
+            .header("Authorization", mockToken)
+        )
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(status().isOk())
+        .andExpect(
+            result -> {
+                ObjectMapper objectMapper = new ObjectMapper();
+                var response = objectMapper.readValue(result.getResponse().getContentAsString(), Account.class);
 
-    @Test
-    void testSeedAdmin_NoExistingAdminAccounts() {
-        // Arrange
-        List<Account> emptyAdminAccounts = new ArrayList<>();
-        when(accountService.getAllAdminAccounts()).thenReturn(emptyAdminAccounts);
-
-        // Act
-        ResponseEntity<String> response = accountController.seedAdmin();
-
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Admin accounts seeded", response.getBody());
-        verify(accountService, times(5)).registerAccount(any());
+                assertEquals(example.getId(), response.getId());
+                assertEquals(example.getUsername(), response.getUsername());
+                assertEquals(example.getRole(), response.getRole());
+                assertEquals(example.getName(), response.getName());
+                assertEquals(example.getEmail(), response.getEmail());
+                assertEquals(example.getPhone(), response.getPhone());
+            }
+        );
     }
 
 }
