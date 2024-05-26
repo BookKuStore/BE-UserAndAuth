@@ -15,8 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class SecurityFilter implements Filter {
 
-    private static final String X_API_KEY = "KNziwqdninINDidwqdji192j9e1cmkasdnaksdnii932niNINi39rnd";
-    
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
