@@ -72,6 +72,12 @@ public class AccountService {
                 case "profileurl":
                     account.setProfileUrl(entry.getValue());
                     break;
+                case "cartid":
+                    account.setCartId(Integer.parseInt(entry.getValue()));
+                    break;
+                case "historyid":
+                    account.setHistoryId(Integer.parseInt(entry.getValue()));
+                    break;
             }
         }
 
