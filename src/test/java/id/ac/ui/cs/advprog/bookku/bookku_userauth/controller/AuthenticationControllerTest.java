@@ -21,6 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AuthenticationController.class)
 class AuthenticationControllerTest {
 
+    private static final String KEY = "KNziwqdninINDidwqdji192j9e1cmkasdnaksdnii932niNINi39rnd";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -33,7 +35,7 @@ class AuthenticationControllerTest {
 
         Mockito.when(authenticationService.register(any(RegisterRequest.class))).thenReturn(registerResponse);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/register")
+        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/register").header("X-API-KEY", KEY)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\":\"username\", \"password\":\"password\", \"role\":\"role\", \"name\":\"name\", \"email\":\"email\", \"phone\":\"phone\"}"))
                 .andExpect(status().isOk())
@@ -46,7 +48,7 @@ class AuthenticationControllerTest {
 
         Mockito.when(authenticationService.login(any(LoginRequest.class))).thenReturn(loginResponse);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/login")
+        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/login").header("X-API-KEY", KEY)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\":\"username\", \"password\":\"password\"}"))
                 .andExpect(status().isOk())

@@ -28,6 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class AccountControllerTest {
 
+    private String KEY = "KNziwqdninINDidwqdji192j9e1cmkasdnaksdnii932niNINi39rnd";
+
     @Autowired
     private MockMvc mvc;
 
@@ -70,6 +72,7 @@ class AccountControllerTest {
 
         mvc.perform(
             get("/account/all")
+            .header("X-API-KEY", KEY)
         ).andExpect(
             result -> {
                 var response = result.getResponse();
@@ -113,6 +116,7 @@ class AccountControllerTest {
         .perform(
             get("/account/get-account")
             .header("Authorization", mockToken)
+            .header("X-API-KEY", KEY)
         )
         .andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())

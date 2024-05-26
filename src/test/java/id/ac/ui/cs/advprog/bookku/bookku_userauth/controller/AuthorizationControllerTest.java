@@ -28,6 +28,8 @@ import id.ac.ui.cs.advprog.bookku.bookku_userauth.service.AuthorizationService;
 @AutoConfigureMockMvc
 class AuthorizationControllerTests {
 
+    private String KEY = "KNziwqdninINDidwqdji192j9e1cmkasdnaksdnii932niNINi39rnd";
+
     private String mockAccessToken = "awiflaoiwfjaiwfja";
 
     @Autowired
@@ -46,6 +48,7 @@ class AuthorizationControllerTests {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", mockAccessToken);
+        headers.add("X-API-KEY", KEY);
 
 
         var authorizeRequest = AuthorizeRequest.builder()
@@ -91,7 +94,7 @@ class AuthorizationControllerTests {
 
         mvc
             .perform(
-                    post("/authorization/refresh")
+                    post("/authorization/refresh").header("X-API-KEY", KEY)
                             .content(objectMapper.writeValueAsString(refreshingTokenRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
