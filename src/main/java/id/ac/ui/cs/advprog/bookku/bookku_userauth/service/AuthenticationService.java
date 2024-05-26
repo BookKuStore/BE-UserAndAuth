@@ -91,8 +91,6 @@ public class AuthenticationService {
         newAccount.setBirthdate("Not specified");
         newAccount.setProfileUrl("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png");
         accountRepository.save(newAccount);
-        try{setNewlyAddedAccountAttributes(request.getUsername());}
-        catch (Exception e){}
 
         var accessToken = jwtService.generateAccessToken(newAccount);
         var refreshToken = jwtService.generateRefreshToken(newAccount);
@@ -108,13 +106,6 @@ public class AuthenticationService {
                 .build();
     }
 
-    private void setNewlyAddedAccountAttributes(String username) {
-        var recentlyAddedAccount = getAccountByUsername(username);
-        recentlyAddedAccount.setCartId(recentlyAddedAccount.getId());
-        recentlyAddedAccount.setHistoryId(recentlyAddedAccount.getId());
-        accountRepository.save(recentlyAddedAccount);
-    }
-    
     private Account getAccountByUsername(String username){
         return accountRepository
         .findByUsername(username)
