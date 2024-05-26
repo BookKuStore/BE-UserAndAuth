@@ -2,7 +2,7 @@ name: SonarCloud
 on:
   push:
     branches:
-      - master
+      - main
 
   pull_request:
     types: [opened, synchronize, reopened]
@@ -24,7 +24,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 1
-          POSTGRES_DB: chart-and-history
+          POSTGRES_DB: bookku-auth
 
     steps:
       - uses: actions/checkout@v3
