@@ -66,6 +66,9 @@ public class AccountService {
                 case "gender":
                     account.setGender(entry.getValue());
                     break;
+                case "birthdate":
+                    account.setBirthdate(entry.getValue());
+                    break;
                 case "bio":
                     account.setBio(entry.getValue());
                     break;
