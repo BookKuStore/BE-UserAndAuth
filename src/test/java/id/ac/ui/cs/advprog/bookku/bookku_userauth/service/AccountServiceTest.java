@@ -148,6 +148,12 @@ class AccountServiceTest {
         HashMap<String, String> attributes = new HashMap<>();
         attributes.put("name", "New Name");
         attributes.put("email", "newemail@example.com");
+        attributes.put("phone", "1234567890");
+        attributes.put("cartId", "1");
+        attributes.put("historyId", "1");
+        attributes.put("bio", "Hello there! I'm using Bookku.");
+        attributes.put("gender", "Not specified");
+        attributes.put("birthdate", "01/01/2001");
         Account account = new Account();
 
         when(jwtService.getAccountFromToken(token)).thenReturn(account);
@@ -160,6 +166,13 @@ class AccountServiceTest {
         assertEquals("Attribute changed successfully", response.getMessage());
         assertEquals("New Name", account.getName());
         assertEquals("newemail@example.com", account.getEmail());
+        assertEquals("1234567890", account.getPhone());
+        assertEquals(1, account.getCartId());
+        assertEquals(1, account.getHistoryId());
+        assertEquals("Hello there! I'm using Bookku.", account.getBio());
+        assertEquals("Not specified", account.getGender());
+        assertEquals("01/01/2001", account.getBirthdate());
+        
         verify(accountRepository).save(account);
     }
 
