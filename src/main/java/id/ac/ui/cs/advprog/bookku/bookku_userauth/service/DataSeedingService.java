@@ -39,11 +39,9 @@ public class DataSeedingService {
 
     @PostConstruct
     public void init() {
-        List<Account> adminList = adminData();
-        for (Account admin : adminList) {
-            accountRepository.deleteByUsername(admin.getUsername());
-        }
+        accountRepository.deleteAll();
 
+        List<Account> adminList = adminData();
         accountRepository.saveAll(adminList);
     }
     
