@@ -1,5 +1,7 @@
 package id.ac.ui.cs.advprog.bookku.bookku_userauth.model;
 
+import java.sql.Date;
+
 import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -12,7 +14,7 @@ import lombok.*;
 @Entity
 @Table(
     name = "account",
-    uniqueConstraints = { @UniqueConstraint(columnNames = {"username"}) }
+    uniqueConstraints = { @UniqueConstraint(columnNames = {"username", "email", "phone"}) }
 )
 public class Account {
 
@@ -43,5 +45,13 @@ public class Account {
     private int cartId;
 
     private int historyId;
+
+    private String bio;
+
+    private String gender;
+
+    private String birthdate;
+
+    private String profileUrl;
 
 }
