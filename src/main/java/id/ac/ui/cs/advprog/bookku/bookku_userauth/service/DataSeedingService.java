@@ -2,6 +2,7 @@ package id.ac.ui.cs.advprog.bookku.bookku_userauth.service;
 
 import id.ac.ui.cs.advprog.bookku.bookku_userauth.model.Account;
 import id.ac.ui.cs.advprog.bookku.bookku_userauth.repository.AccountRepository;
+import id.ac.ui.cs.advprog.bookku.bookku_userauth.repository.RefreshTokenRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Component;
 public class DataSeedingService {
 
     private final AccountRepository accountRepository;
+
+    private final RefreshTokenRepository refreshTokenRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -39,6 +42,7 @@ public class DataSeedingService {
 
     @PostConstruct
     public void init() {
+        refreshTokenRepository.deleteAll();
         accountRepository.deleteAll();
 
         List<Account> adminList = adminData();
