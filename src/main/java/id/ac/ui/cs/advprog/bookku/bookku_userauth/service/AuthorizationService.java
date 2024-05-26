@@ -21,7 +21,11 @@ public class AuthorizationService {
     public AuthorizeResponse authorize(AuthorizeRequest request, String accessToken) {
 
         validateAccess(request, accessToken);
-        validateAuthorizationRequest(request, accessToken);
+        
+        String tokenRole = jwtService.extractRole(accessToken).toUpperCase();
+        if (!tokenRole.equals("ADMIN")) {
+            validateAuthorizationRequest(request, accessToken);
+        }
 
         return AuthorizeResponse.builder()
             .authorized(true)
