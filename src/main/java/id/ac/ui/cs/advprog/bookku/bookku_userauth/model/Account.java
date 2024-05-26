@@ -1,7 +1,5 @@
 package id.ac.ui.cs.advprog.bookku.bookku_userauth.model;
 
-import java.sql.Date;
-
 import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

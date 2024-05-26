@@ -31,11 +31,6 @@ public class SecurityFilter implements Filter {
         if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
             res.setStatus(HttpServletResponse.SC_OK);
         } else {
-            if (req.getHeader("X-API-KEY") == null || !req.getHeader("X-API-KEY").equals(X_API_KEY)) {
-                res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You Are Unauthorized");
-                return;
-            }
-    
             chain.doFilter(request, response);
         }
     }
