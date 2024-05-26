@@ -14,13 +14,30 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class SecurityFilter implements Filter {
+
+    private static final String X_API_KEY = "KNziwqdninINDidwqdji192j9e1cmkasdnaksdnii932niNINi39rnd";
     
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-        chain.doFilter(request, response);
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.setHeader("Access-Control-Allow-Headers", "*");
+        res.setHeader("Access-Control-Expose-Headers", "Authorization");
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+
+        if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
+            res.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            if (req.getHeader("X-API-KEY") == null || !req.getHeader("X-API-KEY").equals(X_API_KEY)) {
+                res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You Are Unauthorized");
+                return;
+            }
+    
+            chain.doFilter(request, response);
+        }
     }
 
 }
